@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
+import './UI/instagram_caption.dart';
 
 final _postIconRadius = 16.0;
 
 class PostDetail extends StatelessWidget {
-  final headerBar = Container(
+  final _headerBar = Container(
     padding: EdgeInsets.only(left: 10.0),
     child: Row(
       children: <Widget>[
@@ -27,9 +28,16 @@ class PostDetail extends StatelessWidget {
     ),
   );
 
-  final image = Image.network('https://via.placeholder.com/400x320');
+  final _image = Center(
+    child: Container(
+      constraints: BoxConstraints(minHeight: 150.0),
+      child: Image.network(
+        'https://via.placeholder.com/1000x150',
+      ),
+    ),
+  );
 
-  final actionsBar = Row(
+  final _actionsBar = Row(
     children: <Widget>[
       IconButton(
         icon: Icon(Icons.favorite_border),
@@ -53,7 +61,7 @@ class PostDetail extends StatelessWidget {
     ],
   );
 
-  final likesBar = Container(
+  final _likesBar = Container(
     padding: EdgeInsets.symmetric(horizontal: 10.0),
     child: Row(
       children: <Widget>[
@@ -103,12 +111,12 @@ class PostDetail extends StatelessWidget {
     ),
   );
 
-  final captionBar = Container(
+  final _captionBar = Container(
     padding: EdgeInsets.symmetric(horizontal: 10.0),
     child: InstaCaption(username, lorem),
   );
 
-  final commentInputBar = Container(
+  final _commentInputBar = Container(
     padding: EdgeInsets.symmetric(horizontal: 10.0),
     child: Row(
       children: <Widget>[
@@ -129,47 +137,51 @@ class PostDetail extends StatelessWidget {
     ),
   );
 
+  final _viewAllComments = Container(
+    padding: EdgeInsets.symmetric(horizontal: 10.0),
+    child: Align(
+      alignment: Alignment.centerLeft,
+      child: Text(
+        'View all comments',
+        style: TextStyle(color: Colors.grey[400]),
+      ),
+    ),
+  );
+
+  final _minutesAgo = Container(
+    padding: EdgeInsets.symmetric(horizontal: 10.0),
+    child: Align(
+      alignment: Alignment.centerLeft,
+      child: Text(
+        '2 minutes ago',
+        style: TextStyle(color: Colors.grey[400], fontSize: 10.0),
+      ),
+    ),
+  );
+
   @override
   Widget build(BuildContext context) {
     return Container(
       padding: EdgeInsets.only(bottom: 15.0),
       child: Column(
         children: <Widget>[
-          headerBar,
-          image,
-          actionsBar,
-          likesBar,
-          captionBar,
+          _headerBar,
+          _image,
+          _actionsBar,
+          _likesBar,
+          _captionBar,
           SizedBox(
             height: 5.0,
           ),
-          Container(
-            padding: EdgeInsets.symmetric(horizontal: 10.0),
-            child: Align(
-              alignment: Alignment.centerLeft,
-              child: Text(
-                'View all comments',
-                style: TextStyle(color: Colors.grey[400]),
-              ),
-            ),
-          ),
+          _viewAllComments,
           SizedBox(
             height: 5.0,
           ),
-          commentInputBar,
+          _commentInputBar,
           SizedBox(
             height: 5.0,
           ),
-          Container(
-            padding: EdgeInsets.symmetric(horizontal: 10.0),
-            child: Align(
-              alignment: Alignment.centerLeft,
-              child: Text(
-                '2 minutes ago',
-                style: TextStyle(color: Colors.grey[400], fontSize: 10.0),
-              ),
-            ),
-          ),
+          _minutesAgo,
           SizedBox(
             height: 5.0,
           ),
@@ -182,73 +194,3 @@ class PostDetail extends StatelessWidget {
 final username = 'alicebob123';
 final lorem =
     'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Aliquam malesuada bibendum arcu vitae elementum. Dictum sit amet justo donec. Arcu non sodales neque sodales ut etiam sit amet nisl. Elit pellentesque habitant morbi tristique. Eu facilisis sed odio morbi.';
-
-class InstaCaption extends StatefulWidget {
-  final String username;
-  final String content;
-  final String wordSeparator;
-
-  InstaCaption(this.username, this.content, {this.wordSeparator = ' '});
-
-  @override
-  _InstaCaptionState createState() => _InstaCaptionState();
-}
-
-class _InstaCaptionState extends State<InstaCaption> {
-  bool showAll = false;
-
-  buildWrapped() {
-    final firstLineCharLimit = 35;
-    final secondLineCharLimit = 30;
-
-    if (widget.content.length > firstLineCharLimit) {
-      final List<String> firstLine = [];
-      final List<String> secondLine = [];
-
-      for (var word in widget.content.split(widget.wordSeparator)) {
-        if (firstLine.join(widget.wordSeparator).length < firstLineCharLimit) {
-          firstLine.add(word);
-        } else if (secondLine.join(widget.wordSeparator).length <
-            secondLineCharLimit) {
-          secondLine.add(word);
-        }
-      }
-
-      final wrap = Wrap(
-        children: <Widget>[
-          Text(
-            widget.username,
-            style: TextStyle(fontWeight: FontWeight.bold),
-          ),
-          Text(' '),
-          Text(firstLine.join(widget.wordSeparator)),
-          Text(secondLine.join(widget.wordSeparator)),
-          GestureDetector(
-            child: Text('... more', style: TextStyle(color: Colors.grey[400])),
-            onTap: () {
-              setState(() {
-                showAll = !showAll;
-              });
-            },
-          ),
-        ],
-      );
-
-      return SizedBox(
-        width: double.infinity,
-        child: wrap,
-      );
-    }
-
-    return Text(widget.content);
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    if (showAll) {
-      return Text(widget.content);
-    }
-
-    return buildWrapped();
-  }
-}

@@ -1,3 +1,4 @@
+import 'dart:math';
 import 'package:flutter/material.dart';
 import './post_detail.dart';
 
@@ -8,7 +9,12 @@ class PostList extends StatelessWidget {
   Widget build(BuildContext context) {
     return ListView(
       children: List.generate(4, (int index) {
-        return PostDetail();
+        final rnd = Random();
+        final width = rnd.nextInt(1000);
+        final height = rnd.nextInt(1000);
+
+        return PostDetail(
+            'https://via.placeholder.com/${width < 150 ? width + 150 : width}x${height < 150 ? width + 150 : height}');
       }),
     );
   }

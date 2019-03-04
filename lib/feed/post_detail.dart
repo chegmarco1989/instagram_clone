@@ -4,6 +4,10 @@ import '../UI/instagram_caption.dart';
 final _postIconRadius = 16.0;
 
 class PostDetail extends StatelessWidget {
+  final String imageUrl;
+
+  PostDetail(this.imageUrl);
+
   final _headerBar = Container(
     padding: EdgeInsets.only(left: 10.0),
     child: Row(
@@ -28,14 +32,15 @@ class PostDetail extends StatelessWidget {
     ),
   );
 
-  final _image = Center(
-    child: Container(
-      constraints: BoxConstraints(minHeight: 150.0),
-      child: Image.network(
-        'https://via.placeholder.com/1000x150',
-      ),
-    ),
-  );
+  Widget _buildImage() => Center(
+        child: Container(
+          constraints: BoxConstraints(
+            minHeight: 150.0,
+            maxHeight: 350.0,
+          ),
+          child: Image.network(imageUrl),
+        ),
+      );
 
   final _actionsBar = Row(
     children: <Widget>[
@@ -166,7 +171,7 @@ class PostDetail extends StatelessWidget {
       child: Column(
         children: <Widget>[
           _headerBar,
-          _image,
+          _buildImage(),
           _actionsBar,
           _likesBar,
           _captionBar,

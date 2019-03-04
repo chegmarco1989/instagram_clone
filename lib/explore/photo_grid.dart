@@ -1,48 +1,58 @@
+import 'dart:math';
 import 'package:flutter/material.dart';
-import '../random_image_url.dart';
 
 class PhotoGrid extends StatelessWidget {
-  final spacing = 20.0;
+  final double spacing;
+  final List<String> imageUrls;
 
-  Widget _buildBox(double height, double width) {
+  PhotoGrid(this.imageUrls, this.spacing);
+
+  Widget _buildBox(double height, double width, String url) {
     return Container(
       height: height,
       width: width,
-      child: Image.network(
-        randomImageUrl(),
-        fit: BoxFit.cover,
+      child: url.isEmpty
+          ? Text('')
+          : Image.network(
+              url,
+              fit: BoxFit.cover,
+            ),
+    );
+  }
+
+  Widget _build3Small(double windowWidth, List<String> urls) {
+    final width = windowWidth / 3 - spacing * 2 / 3;
+    final height = width;
+
+    return Container(
+      margin: EdgeInsets.only(bottom: spacing),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: <Widget>[
+          _buildBox(height, width, urls[0]),
+          _buildBox(height, width, urls[1]),
+          _buildBox(height, width, urls[2]),
+        ],
       ),
     );
   }
 
-  Widget _build3Small(double windowWidth) {
-    final width = windowWidth / 3 - spacing * 2 / 3;
-    final height = width;
-
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: <Widget>[
-        _buildBox(height, width),
-        _buildBox(height, width),
-        _buildBox(height, width),
-      ],
-    );
-  }
-
-  Widget _build1Large2Small(double windowWidth, {largeFirst = true}) {
+  Widget _build1Large2Small(double windowWidth, List<String> urls,
+      {bool largeFirst = true}) {
     final unit = windowWidth / 3 - spacing * 2 / 3;
     final rowChildren = <Widget>[
-      _buildBox(unit * 2 + spacing, unit * 2 + spacing),
+      _buildBox(unit * 2 + spacing, unit * 2 + spacing, urls[0]),
       Column(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: <Widget>[
-          _buildBox(unit, unit),
-          _buildBox(unit, unit),
+          _buildBox(unit, unit, urls[1]),
+          _buildBox(unit, unit, urls[2]),
         ],
       ),
     ];
 
     return Container(
+      margin: EdgeInsets.only(bottom: spacing),
       height: unit * 2 + spacing,
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -55,19 +65,33 @@ class PhotoGrid extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final windowWidth = MediaQuery.of(context).size.width;
+    final urlCount = imageUrls.length;
+
+    List<Widget> children = [];
+    List<String> urls = [];
+    for (var i = 0; i < urlCount; i++) {
+      urls.add(imageUrls[i]);
+
+      if (urls.length == 3) {
+        Widget row;
+        final rnd = Random();
+        final prob = rnd.nextDouble();
+
+        if (prob <= 0.3) {
+          row = _build3Small(windowWidth, urls);
+        } else if (prob <= 0.6) {
+          row = _build1Large2Small(windowWidth, urls);
+        } else {
+          row = _build1Large2Small(windowWidth, urls, largeFirst: false);
+        }
+
+        children.add(row);
+        urls = [];
+      }
+    }
 
     return ListView(
-      children: <Widget>[
-        _build3Small(windowWidth),
-        SizedBox(
-          height: spacing,
-        ),
-        _build1Large2Small(windowWidth),
-        SizedBox(
-          height: spacing,
-        ),
-        _build1Large2Small(windowWidth, largeFirst: false),
-      ],
+      children: children,
     );
   }
 }

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import './topic_bar.dart';
 import './photo_grid.dart';
+import '../random_image_url.dart';
 
 class Explore extends StatelessWidget {
   @override
@@ -14,7 +15,12 @@ class Explore extends StatelessWidget {
           ),
           Expanded(
             flex: 5,
-            child: PhotoGrid(),
+            child: PhotoGrid(
+              List.generate(10, (int index) {
+                return randomImageUrl();
+              }),
+              20.0,
+            ),
           ),
         ],
       ),

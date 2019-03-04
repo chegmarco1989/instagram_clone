@@ -11,7 +11,7 @@ class TopicBar extends StatelessWidget {
       children.add(ClipRRect(
         borderRadius: BorderRadius.all(Radius.circular(5.0)),
         child: Container(
-          color: Colors.grey,
+          color: Colors.grey[350],
           width: 100.0,
         ),
       ));

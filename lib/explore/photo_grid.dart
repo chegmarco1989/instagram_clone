@@ -1,66 +1,73 @@
-import 'dart:math';
 import 'package:flutter/material.dart';
+import '../random_image_url.dart';
 
 class PhotoGrid extends StatelessWidget {
-  Widget _buildBox(double unit) {
+  final spacing = 20.0;
+
+  Widget _buildBox(double height, double width) {
     return Container(
-      decoration: BoxDecoration(border: Border.all(color: Colors.red)),
-      height: unit,
-      width: unit,
+      height: height,
+      width: width,
+      child: Image.network(
+        randomImageUrl(),
+        fit: BoxFit.cover,
+      ),
     );
   }
 
-  Widget _build3Small(double unit) {
-    return Row(
-      children: List.generate(3, (int index) {
-        return _buildBox(unit);
-      }),
-    );
-  }
+  Widget _build3Small(double windowWidth) {
+    final width = windowWidth / 3 - spacing * 2 / 3;
+    final height = width;
 
-  Widget _build2Small1Large(double unit) {
     return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: <Widget>[
-        Column(
-          children: <Widget>[
-            _buildBox(unit),
-            _buildBox(unit),
-          ],
-        ),
-        _buildBox(unit * 2),
+        _buildBox(height, width),
+        _buildBox(height, width),
+        _buildBox(height, width),
       ],
     );
   }
 
-  Widget _build1Large2Small(double unit) {
-    return Row(
-      children: <Widget>[
-        _buildBox(unit * 2),
-        Column(
-          children: <Widget>[
-            _buildBox(unit),
-            _buildBox(unit),
-          ],
-        ),
-      ],
-    );
-  }
-
-  _buildChildren(double unit) {
-    return <Widget>[
-      _build3Small(unit),
-      _build1Large2Small(unit),
-      _build2Small1Large(unit),
+  Widget _build1Large2Small(double windowWidth, {largeFirst = true}) {
+    final unit = windowWidth / 3 - spacing * 2 / 3;
+    final rowChildren = <Widget>[
+      _buildBox(unit * 2 + spacing, unit * 2 + spacing),
+      Column(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: <Widget>[
+          _buildBox(unit, unit),
+          _buildBox(unit, unit),
+        ],
+      ),
     ];
+
+    return Container(
+      height: unit * 2 + spacing,
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: largeFirst ? rowChildren : rowChildren.reversed.toList(),
+      ),
+    );
   }
 
   @override
   Widget build(BuildContext context) {
     final windowWidth = MediaQuery.of(context).size.width;
-    final unit = windowWidth / 3;
 
     return ListView(
-      children: _buildChildren(unit),
+      children: <Widget>[
+        _build3Small(windowWidth),
+        SizedBox(
+          height: spacing,
+        ),
+        _build1Large2Small(windowWidth),
+        SizedBox(
+          height: spacing,
+        ),
+        _build1Large2Small(windowWidth, largeFirst: false),
+      ],
     );
   }
 }

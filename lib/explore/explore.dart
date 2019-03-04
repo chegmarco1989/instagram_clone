@@ -16,7 +16,7 @@ class Explore extends StatelessWidget {
           Expanded(
             flex: 5,
             child: PhotoGrid(
-              List.generate(10, (int index) {
+              List.generate(1000, (int index) {
                 return randomImageUrl();
               }),
               20.0,

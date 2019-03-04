@@ -67,12 +67,15 @@ class PhotoGrid extends StatelessWidget {
     final windowWidth = MediaQuery.of(context).size.width;
     final urlCount = imageUrls.length;
 
-    List<Widget> children = [];
-    List<String> urls = [];
-    for (var i = 0; i < urlCount; i++) {
-      urls.add(imageUrls[i]);
+    return ListView.builder(
+      itemCount: (urlCount / 3).ceil(),
+      itemBuilder: (BuildContext context, int index) {
+        final List<String> urls = [];
+        for (var i = 0; i < 3; i++) {
+          final url = index + i < urlCount ? imageUrls[index + i] : '';
+          urls.add(url);
+        }
 
-      if (urls.length == 3) {
         Widget row;
         final rnd = Random();
         final prob = rnd.nextDouble();
@@ -85,13 +88,8 @@ class PhotoGrid extends StatelessWidget {
           row = _build1Large2Small(windowWidth, urls, largeFirst: false);
         }
 
-        children.add(row);
-        urls = [];
-      }
-    }
-
-    return ListView(
-      children: children,
+        return row;
+      },
     );
   }
 }

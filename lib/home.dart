@@ -1,7 +1,21 @@
 import 'package:flutter/material.dart';
-import './home_body.dart';
+import './feed/feed.dart';
+import './explore/explore.dart';
 
-class Home extends StatelessWidget {
+class Home extends StatefulWidget {
+  @override
+  _HomeState createState() => _HomeState();
+}
+
+enum _Page { feed, explore, camera, favorite, profile }
+
+class _HomeState extends State<Home> {
+  _Page _currentPage = _Page.feed;
+  Map<_Page, Widget> _pageToBody = {
+    _Page.feed: Feed(),
+    _Page.explore: Explore(),
+  };
+
   final appBar = AppBar(
     leading: IconButton(
       icon: Icon(Icons.camera_alt),
@@ -22,28 +36,58 @@ class Home extends StatelessWidget {
     ],
   );
 
-  final bottomNavigationBar = BottomAppBar(
-    child: Container(
-      height: 50.0,
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceAround,
-        children: <Widget>[
-          Icon(Icons.home),
-          Icon(Icons.search),
-          Icon(Icons.add_box),
-          Icon(Icons.favorite_border),
-          Icon(Icons.person_outline),
-        ],
+  Widget _buildBottomBar() {
+    return BottomAppBar(
+      child: Container(
+        height: 50.0,
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceAround,
+          children: <Widget>[
+            IconButton(
+              padding: EdgeInsets.zero,
+              icon: Icon(Icons.home),
+              onPressed: () {
+                setState(() {
+                  _currentPage = _Page.feed;
+                });
+              },
+            ),
+            IconButton(
+              padding: EdgeInsets.zero,
+              icon: Icon(Icons.search),
+              onPressed: () {
+                setState(() {
+                  _currentPage = _Page.explore;
+                });
+              },
+            ),
+            IconButton(
+              padding: EdgeInsets.zero,
+              icon: Icon(Icons.add_box),
+              onPressed: () {},
+            ),
+            IconButton(
+              padding: EdgeInsets.zero,
+              icon: Icon(Icons.favorite_border),
+              onPressed: () {},
+            ),
+            IconButton(
+              padding: EdgeInsets.zero,
+              icon: Icon(Icons.person_outline),
+              onPressed: () {},
+            ),
+          ],
+        ),
       ),
-    ),
-  );
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: appBar,
-      body: HomeBody(),
-      bottomNavigationBar: bottomNavigationBar,
+      body: _pageToBody[_currentPage],
+      bottomNavigationBar: _buildBottomBar(),
     );
   }
 }

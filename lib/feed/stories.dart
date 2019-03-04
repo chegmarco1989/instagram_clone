@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 class Stories extends StatelessWidget {
-  final children = List<Widget>.generate(10, (int index) {
+  final _children = List<Widget>.generate(10, (int index) {
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 7.0),
       child: Column(
@@ -27,7 +27,7 @@ class Stories extends StatelessWidget {
       padding: EdgeInsets.symmetric(vertical: 10.0),
       child: ListView(
         scrollDirection: Axis.horizontal,
-        children: children,
+        children: _children,
       ),
     );
   }

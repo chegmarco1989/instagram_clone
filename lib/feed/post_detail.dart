@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import './UI/instagram_caption.dart';
+import '../UI/instagram_caption.dart';
 
 final _postIconRadius = 16.0;
 

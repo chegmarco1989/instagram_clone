@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import './stories.dart';
 import './post_list.dart';
 
-class HomeBody extends StatelessWidget {
+class Feed extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Column(

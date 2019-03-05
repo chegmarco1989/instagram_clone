@@ -4,18 +4,39 @@ import 'package:flutter/material.dart';
 class PhotoGrid extends StatelessWidget {
   final double spacing;
   final List<String> imageUrls;
+  BuildContext _context;
 
   PhotoGrid(this.imageUrls, this.spacing);
 
+  _onImageLongPress(Widget image) {
+    return showDialog(
+        context: _context,
+        builder: (context) {
+          return Dialog(
+            child: Container(
+              constraints: BoxConstraints(
+                maxHeight: MediaQuery.of(_context).size.height,
+              ),
+              child: image,
+            ),
+          );
+        });
+  }
+
   Widget _buildBox(double height, double width, String url) {
+    final image = Image.network(
+      url,
+      fit: BoxFit.cover,
+    );
+
     return Container(
       height: height,
       width: width,
       child: url.isEmpty
           ? Text('')
-          : Image.network(
-              url,
-              fit: BoxFit.cover,
+          : GestureDetector(
+              onLongPress: () => _onImageLongPress(image),
+              child: image,
             ),
     );
   }
@@ -70,6 +91,8 @@ class PhotoGrid extends StatelessWidget {
     return ListView.builder(
       itemCount: (urlCount / 3).ceil(),
       itemBuilder: (BuildContext context, int index) {
+        _context = context;
+
         final List<String> urls = [];
         for (var i = 0; i < 3; i++) {
           final url = index * 3 + i < urlCount ? imageUrls[index * 3 + i] : '';

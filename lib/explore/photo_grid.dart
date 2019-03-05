@@ -72,7 +72,7 @@ class PhotoGrid extends StatelessWidget {
       itemBuilder: (BuildContext context, int index) {
         final List<String> urls = [];
         for (var i = 0; i < 3; i++) {
-          final url = index + i < urlCount ? imageUrls[index + i] : '';
+          final url = index * 3 + i < urlCount ? imageUrls[index * 3 + i] : '';
           urls.add(url);
         }
 

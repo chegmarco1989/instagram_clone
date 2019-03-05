@@ -19,7 +19,7 @@ class Explore extends StatelessWidget {
               List.generate(1000, (int index) {
                 return randomImageUrl();
               }),
-              20.0,
+              2.5,
             ),
           ),
         ],

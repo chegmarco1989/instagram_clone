@@ -85,7 +85,6 @@ class _HomeState extends State<Home> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.teal,
       appBar: appBar,
       body: _pageToBody[_currentPage],
       bottomNavigationBar: _buildBottomBar(),

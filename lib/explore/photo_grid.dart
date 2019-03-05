@@ -1,5 +1,6 @@
 import 'dart:math';
 import 'package:flutter/material.dart';
+import './hero_dialog_route.dart';
 
 class PhotoGrid extends StatelessWidget {
   final double spacing;
@@ -8,26 +9,29 @@ class PhotoGrid extends StatelessWidget {
 
   PhotoGrid(this.imageUrls, this.spacing);
 
-  _onImageLongPress(Widget image) {
-    return showDialog(
-        context: _context,
-        builder: (context) {
-          return Dialog(
-            child: Container(
-              constraints: BoxConstraints(
-                maxHeight: MediaQuery.of(_context).size.height,
-              ),
-              child: image,
+  _onImageLongPress(ImageProvider imageProvider, String url) {
+    Navigator.push(_context, HeroDialogRoute(
+      builder: (context) {
+        return Dialog(
+          child: Container(
+            constraints: BoxConstraints(
+              maxHeight: MediaQuery.of(_context).size.height,
             ),
-          );
-        });
+            child: Hero(
+              child: Image(
+                image: imageProvider,
+                fit: BoxFit.contain,
+              ),
+              tag: url,
+            ),
+          ),
+        );
+      },
+    ));
   }
 
   Widget _buildBox(double height, double width, String url) {
-    final image = Image.network(
-      url,
-      fit: BoxFit.cover,
-    );
+    final imageProvider = NetworkImage(url);
 
     return Container(
       height: height,
@@ -35,8 +39,14 @@ class PhotoGrid extends StatelessWidget {
       child: url.isEmpty
           ? Text('')
           : GestureDetector(
-              onLongPress: () => _onImageLongPress(image),
-              child: image,
+              onLongPress: () => _onImageLongPress(imageProvider, url),
+              child: Hero(
+                tag: url,
+                child: Image(
+                  image: imageProvider,
+                  fit: BoxFit.cover,
+                ),
+              ),
             ),
     );
   }
